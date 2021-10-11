@@ -1,9 +1,11 @@
+import Excalidraw from '@excalidraw/excalidraw-next';
+
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      Excalidraw for Webex
+    <div className="excalidraw-wrapper">
+      <Excalidraw/>
     </div>
   );
 }
