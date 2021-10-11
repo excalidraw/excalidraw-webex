@@ -46,7 +46,7 @@
     "@excalidraw/eslint-config": "^1.0.1",
     "@excalidraw/prettier-config": "^1.0.2",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-prettier": "^3.4.1",
     "prettier": "^2.4.1"
   }
 }
