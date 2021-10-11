@@ -1,14 +1,15 @@
-import Excalidraw from '@excalidraw/excalidraw-next';
+import React from "react";
 
-import './App.css';
+import Excalidraw from "@excalidraw/excalidraw-next";
+
+import "./App.css";
 
 function App() {
   return (
     <div className="excalidraw-wrapper">
-      <Excalidraw/>
+      <Excalidraw />
     </div>
   );
 }
 
 export default App;
-  
