@@ -4,7 +4,6 @@
   "private": true,
   "prettier": "@excalidraw/prettier-config",
   "dependencies": {
-    "aakansha-excalidraw": "0.9.0-fix",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -12,9 +11,15 @@
     "@types/node": "^16.10.3",
     "@types/react": "^17.0.27",
     "@types/react-dom": "^17.0.9",
+    "aakansha-excalidraw": "0.9.0-fix",
+    "clsx": "^1.1.1",
+    "lodash.throttle": "^4.1.1",
+    "open-color": "^1.9.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "sass": "^1.42.1",
+    "socket.io-client": "^2.3.1",
     "typescript": "^4.4.3"
   },
   "scripts": {
@@ -44,6 +49,8 @@
   "devDependencies": {
     "@excalidraw/eslint-config": "^1.0.1",
     "@excalidraw/prettier-config": "^1.0.2",
+    "@types/lodash.throttle": "^4.1.6",
+    "@types/socket.io-client": "^1.4.36",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.1",
     "prettier": "^2.4.1"
