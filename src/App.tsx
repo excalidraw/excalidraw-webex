@@ -1,6 +1,6 @@
 import React from "react";
 
-import Excalidraw from "@excalidraw/excalidraw-next";
+import Excalidraw from "aakansha-excalidraw";
 
 import "./App.css";
 
