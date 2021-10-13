@@ -309,7 +309,6 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
         activeRoomLink: window.location.href,
       },
       () => {
-        console.log(this.state.activeRoomLink, "starting url");
         window.webexInstance.setShareUrl(this.state.activeRoomLink);
       },
     );
