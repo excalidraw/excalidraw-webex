@@ -30,6 +30,7 @@ const ExcalidrawWrapper = () => {
   }>({ promise: null! });
 
   const [loaded, setLoaded] = useState(false);
+  const [user, setUser] = useState({});
 
   if (!initialStatePromiseRef.current.promise) {
     initialStatePromiseRef.current.promise =
@@ -59,11 +60,11 @@ const ExcalidrawWrapper = () => {
     webexApp.onReady().then(() => {
       webexApp.context
         .getUser()
-        .then((user: object) => {
-          console.log("getUser() promise resolved. User", user);
+        .then((user: { displayName: string }) => {
+          setUser(user);
         })
         .catch((error: Error) => {
-          console.log("getUser() promise failed " + error.message);
+          console.error("getUser() promise failed " + error.message);
         });
     });
   };
@@ -98,7 +99,9 @@ const ExcalidrawWrapper = () => {
         initialData={initialStatePromiseRef.current.promise}
         onPointerUpdate={collabAPI?.onPointerUpdate}
       />
-      {excalidrawAPI && <CollabWrapper excalidrawAPI={excalidrawAPI} />}
+      {excalidrawAPI && (
+        <CollabWrapper excalidrawAPI={excalidrawAPI} user={user} />
+      )}
     </div>
   );
 };
