@@ -3,7 +3,7 @@ import {
   AppState,
   ExcalidrawImperativeAPI,
 } from "aakansha-excalidraw/types/types";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import CollabWrapper, {
   CollabAPI,
@@ -17,7 +17,8 @@ import { ExcalidrawElement } from "aakansha-excalidraw/types/element/types";
 import { ImportedDataState } from "aakansha-excalidraw/types/data/types";
 import { getCollaborationLinkData } from "./data";
 import { ResolvablePromise } from "aakansha-excalidraw/types/utils";
-import { resolvablePromise } from "./utils";
+import { loadScript, resolvablePromise } from "./utils";
+import { WEBEX_URL } from "./constants";
 
 const ExcalidrawWrapper = () => {
   const [excalidrawAPI, excalidrawRefCallback] =
@@ -27,11 +28,21 @@ const ExcalidrawWrapper = () => {
   const initialStatePromiseRef = useRef<{
     promise: ResolvablePromise<ImportedDataState | null>;
   }>({ promise: null! });
+
+  const [loaded, setLoaded] = useState(false);
+
   if (!initialStatePromiseRef.current.promise) {
     initialStatePromiseRef.current.promise =
       resolvablePromise<ImportedDataState | null>();
   }
 
+  useEffect(() => {
+    loadScript(WEBEX_URL).then(() => {
+      window.webexInstance = new window.Webex.Application();
+
+      setLoaded(true);
+    });
+  }, []);
   useEffect(() => {
     if (!collabAPI || !excalidrawAPI) {
       return;
@@ -40,7 +51,7 @@ const ExcalidrawWrapper = () => {
     initializeScene({ collabAPI }).then((scene) => {
       initialStatePromiseRef.current.promise.resolve(scene);
     });
-  });
+  }, [collabAPI, excalidrawAPI]);
 
   const initializeScene = async (opts: {
     collabAPI: CollabAPI;
@@ -59,6 +70,9 @@ const ExcalidrawWrapper = () => {
       collabAPI.broadcastElements(elements);
     }
   };
+  if (!loaded) {
+    return null;
+  }
   return (
     <div className="excalidraw-wrapper">
       <Excalidraw
@@ -79,6 +93,7 @@ declare global {
     Webex: {
       Application: any;
     };
+    webexInstance: any;
   }
 }
 

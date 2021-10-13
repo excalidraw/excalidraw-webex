@@ -150,6 +150,7 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
       this.setState({
         activeRoomLink: "",
       });
+      window.webexInstance.clearShareUrl();
       this.isCollaborating = false;
     }
     this.portal.close();
@@ -303,9 +304,14 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
       scenePromise.resolve(null);
     });
 
-    this.setState({
-      activeRoomLink: window.location.href,
-    });
+    this.setState(
+      {
+        activeRoomLink: window.location.href,
+      },
+      () => {
+        window.webexInstance.setShareUrl(this.state.activeRoomLink);
+      },
+    );
 
     return scenePromise;
   };
@@ -382,14 +388,8 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
   };
 
   closePortal = () => {
-    if (
-      window.confirm(
-        "Stopping the session will overwrite your previous, locally stored drawing. Are you sure?\n\n(If you want to keep your local drawing, simply close the browser tab instead.)",
-      )
-    ) {
-      window.history.pushState({}, APP_NAME, window.location.origin);
-      this.destroySocketClient();
-    }
+    window.history.pushState({}, APP_NAME, window.location.origin);
+    this.destroySocketClient();
   };
 
   getSyncableElements = (elements: readonly ExcalidrawElement[]) =>
