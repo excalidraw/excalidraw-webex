@@ -64,7 +64,7 @@ const ExcalidrawWrapper = () => {
           setUser(user);
         })
         .catch((error: Error) => {
-          console.error("getUser() promise failed " + error.message);
+          console.error(error.message);
         });
     });
   };
