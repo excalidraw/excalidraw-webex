@@ -136,7 +136,7 @@ class Portal {
         payload: {
           socketId: this.socket.id,
           userState,
-          username: this.collab.state.username,
+          username: this.collab.props.user.displayName || "",
         },
       };
       return this._broadcastSocketData(
@@ -159,7 +159,7 @@ class Portal {
           button: payload.button || "up",
           selectedElementIds:
             this.collab.excalidrawAPI.getAppState().selectedElementIds,
-          username: this.collab.state.username,
+          username: this.collab.props.user.displayName || "",
         },
       };
       return this._broadcastSocketData(

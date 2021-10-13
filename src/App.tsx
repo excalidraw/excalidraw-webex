@@ -30,6 +30,7 @@ const ExcalidrawWrapper = () => {
   }>({ promise: null! });
 
   const [loaded, setLoaded] = useState(false);
+  const [user, setUser] = useState({});
 
   if (!initialStatePromiseRef.current.promise) {
     initialStatePromiseRef.current.promise =
@@ -38,11 +39,11 @@ const ExcalidrawWrapper = () => {
 
   useEffect(() => {
     loadScript(WEBEX_URL).then(() => {
-      window.webexInstance = new window.Webex.Application();
-
+      initializeWebex();
       setLoaded(true);
     });
   }, []);
+
   useEffect(() => {
     if (!collabAPI || !excalidrawAPI) {
       return;
@@ -52,6 +53,21 @@ const ExcalidrawWrapper = () => {
       initialStatePromiseRef.current.promise.resolve(scene);
     });
   }, [collabAPI, excalidrawAPI]);
+
+  const initializeWebex = () => {
+    window.webexInstance = new window.Webex.Application();
+    const webexApp = window.webexInstance;
+    webexApp.onReady().then(() => {
+      webexApp.context
+        .getUser()
+        .then((user: { displayName: string }) => {
+          setUser(user);
+        })
+        .catch((error: Error) => {
+          console.error(error.message);
+        });
+    });
+  };
 
   const initializeScene = async (opts: {
     collabAPI: CollabAPI;
@@ -83,7 +99,9 @@ const ExcalidrawWrapper = () => {
         initialData={initialStatePromiseRef.current.promise}
         onPointerUpdate={collabAPI?.onPointerUpdate}
       />
-      {excalidrawAPI && <CollabWrapper excalidrawAPI={excalidrawAPI} />}
+      {excalidrawAPI && (
+        <CollabWrapper excalidrawAPI={excalidrawAPI} user={user} />
+      )}
     </div>
   );
 };

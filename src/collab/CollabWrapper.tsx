@@ -36,14 +36,12 @@ interface CollabState {
   modalIsShown: boolean;
   activeRoomLink: string;
   errorMessage: string;
-  username: string;
 }
 
 type CollabInstance = InstanceType<typeof CollabWrapper>;
 
 export interface CollabAPI {
   isCollaborating: () => boolean;
-  username: CollabState["username"];
   initializeSocketClient: CollabInstance["initializeSocketClient"];
   onCollabButtonClick: CollabInstance["onCollabButtonClick"];
   broadcastElements: CollabInstance["broadcastElements"];
@@ -60,6 +58,9 @@ type Mutable<T> = {
 
 interface Props {
   excalidrawAPI: ExcalidrawImperativeAPI;
+  user: {
+    displayName?: string;
+  };
 }
 
 const {
@@ -85,7 +86,6 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
       modalIsShown: false,
       activeRoomLink: "",
       errorMessage: "",
-      username: "",
     };
 
     this.portal = new Portal(this);
