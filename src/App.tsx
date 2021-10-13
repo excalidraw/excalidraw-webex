@@ -55,9 +55,16 @@ const ExcalidrawWrapper = () => {
 
   const initializeWebex = () => {
     window.webexInstance = new window.Webex.Application();
-    const webex = window.webexInstance;
-    webex.context.getUser().then((user: object) => {
-      console.log(user, "hello user");
+    const webexApp = window.webexInstance;
+    webexApp.onReady().then(() => {
+      webexApp.context
+        .getUser()
+        .then((user: object) => {
+          console.log("getUser() promise resolved. User", user);
+        })
+        .catch((error: Error) => {
+          console.log("getUser() promise failed " + error.message);
+        });
     });
   };
 
