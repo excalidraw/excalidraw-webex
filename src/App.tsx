@@ -70,7 +70,9 @@ const ExcalidrawWrapper = () => {
       collabAPI.broadcastElements(elements);
     }
   };
-  if (!loaded) return null;
+  if (!loaded) {
+    return null;
+  }
   return (
     <div className="excalidraw-wrapper">
       <Excalidraw
