@@ -27,6 +27,7 @@ const ExcalidrawWrapper = () => {
   const initialStatePromiseRef = useRef<{
     promise: ResolvablePromise<ImportedDataState | null>;
   }>({ promise: null! });
+
   if (!initialStatePromiseRef.current.promise) {
     initialStatePromiseRef.current.promise =
       resolvablePromise<ImportedDataState | null>();
@@ -40,7 +41,7 @@ const ExcalidrawWrapper = () => {
     initializeScene({ collabAPI }).then((scene) => {
       initialStatePromiseRef.current.promise.resolve(scene);
     });
-  });
+  }, [collabAPI, excalidrawAPI]);
 
   const initializeScene = async (opts: {
     collabAPI: CollabAPI;
@@ -79,6 +80,7 @@ declare global {
     Webex: {
       Application: any;
     };
+    webexInstance: any;
   }
 }
 
