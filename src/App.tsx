@@ -57,6 +57,7 @@ const ExcalidrawWrapper = () => {
     collabAPI: CollabAPI;
   }): Promise<ImportedDataState | null> => {
     const roomLinkData = getCollaborationLinkData(window.location.href);
+    console.log(window.location.href, "location");
     if (roomLinkData) {
       return opts.collabAPI.initializeSocketClient(roomLinkData);
     }
