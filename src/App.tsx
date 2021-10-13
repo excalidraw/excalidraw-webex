@@ -38,11 +38,11 @@ const ExcalidrawWrapper = () => {
 
   useEffect(() => {
     loadScript(WEBEX_URL).then(() => {
-      window.webexInstance = new window.Webex.Application();
-
+      initializeWebex();
       setLoaded(true);
     });
   }, []);
+
   useEffect(() => {
     if (!collabAPI || !excalidrawAPI) {
       return;
@@ -52,6 +52,14 @@ const ExcalidrawWrapper = () => {
       initialStatePromiseRef.current.promise.resolve(scene);
     });
   }, [collabAPI, excalidrawAPI]);
+
+  const initializeWebex = () => {
+    window.webexInstance = new window.Webex.Application();
+    const webex = window.webexInstance;
+    webex.context.getUser().then((user: object) => {
+      console.log(user, "hello user");
+    });
+  };
 
   const initializeScene = async (opts: {
     collabAPI: CollabAPI;
