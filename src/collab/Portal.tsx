@@ -8,7 +8,7 @@ import CollabWrapper from "./CollabWrapper";
 
 import { BROADCAST, SCENE } from "../app_constants";
 import { UserIdleState } from "../types";
-import { ExcalidrawElement } from "aakansha-excalidraw/types/element/types";
+import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
 
 class Portal {
   collab: CollabWrapper;

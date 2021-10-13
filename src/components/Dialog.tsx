@@ -1,4 +1,4 @@
-import { AppState } from "aakansha-excalidraw/types/types";
+import { AppState } from "@excalidraw/excalidraw/types/types";
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 import { KEYS } from "../keys";

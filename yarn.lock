@@ -1182,6 +1182,11 @@
   resolved "https://registry.yarnpkg.com/@excalidraw/eslint-config/-/eslint-config-1.0.1.tgz#1289559eb9bdf84117c5af5d082343ab6d36fd65"
   integrity sha512-BUkZLH2M1sPA/wPbho8w8yJhSY+jdd4lB9fs2Dn606ZutlDKXVMnn8LqrtAlYiJlRYwi6EQRgGdVkNrHCOssjg==
 
+"@excalidraw/excalidraw@0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@excalidraw/excalidraw/-/excalidraw-0.10.0.tgz#5329d6fb1b0cca068e2cd34da6d648dd6d0d3fec"
+  integrity sha512-0fHc/oX394dHAT7LEacwZ0vh8aeI179plYnfaeLeRHBtHARgmtlmvxcnxd2pxJ0Z1Uj/Cy76oK9MVw/y8P1HhQ==
+
 "@excalidraw/prettier-config@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@excalidraw/prettier-config/-/prettier-config-1.0.2.tgz#b7c061c99cee2f78b9ca470ea1fbd602683bba65"
@@ -2188,11 +2193,6 @@
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
-
-aakansha-excalidraw@0.9.0-fix:
-  version "0.9.0-fix"
-  resolved "https://registry.yarnpkg.com/aakansha-excalidraw/-/aakansha-excalidraw-0.9.0-fix.tgz#7adf48238012734226e82b9f8b99af97764f4cb7"
-  integrity sha512-M/fufHrvNt3z17u+TLKHe6KczC6KPlq8Wd8nKdzlVbyO3nSe/W+rNbX7WxwdFYjPKBaGyYCwgUuSklchtdjx1Q==
 
 abab@^2.0.3:
   version "2.0.5"

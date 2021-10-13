@@ -1,4 +1,4 @@
-import { AppState } from "aakansha-excalidraw/types/types";
+import { AppState } from "@excalidraw/excalidraw/types/types";
 import React, { useRef } from "react";
 import { start, stop } from "../components/icons";
 import { ToolButton } from "../components/ToolButton";

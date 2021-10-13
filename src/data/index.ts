@@ -1,5 +1,5 @@
-import { ExcalidrawElement } from "aakansha-excalidraw/types/element/types";
-import { AppState, UserIdleState } from "aakansha-excalidraw/types/types";
+import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
+import { AppState, UserIdleState } from "@excalidraw/excalidraw/types/types";
 
 const IV_LENGTH_BYTES = 12; // 96 bits
 const byteToHex = (byte: number): string => `0${byte.toString(16)}`.slice(-2);

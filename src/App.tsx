@@ -1,8 +1,8 @@
-import Excalidraw from "aakansha-excalidraw";
+import Excalidraw from "@excalidraw/excalidraw";
 import {
   AppState,
   ExcalidrawImperativeAPI,
-} from "aakansha-excalidraw/types/types";
+} from "@excalidraw/excalidraw/types/types";
 import { useContext, useEffect, useRef, useState } from "react";
 
 import CollabWrapper, {
@@ -13,10 +13,10 @@ import CollabWrapper, {
 import { useCallbackRefState } from "./hooks/useCallbackRefState";
 
 import "./App.css";
-import { ExcalidrawElement } from "aakansha-excalidraw/types/element/types";
-import { ImportedDataState } from "aakansha-excalidraw/types/data/types";
+import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
+import { ImportedDataState } from "@excalidraw/excalidraw/types/data/types";
 import { getCollaborationLinkData } from "./data";
-import { ResolvablePromise } from "aakansha-excalidraw/types/utils";
+import { ResolvablePromise } from "@excalidraw/excalidraw/types/utils";
 import { loadScript, resolvablePromise } from "./utils";
 import { WEBEX_URL } from "./constants";
 

@@ -1,4 +1,4 @@
-import { ExcalidrawElement } from "aakansha-excalidraw/types/element/types";
+import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
 import { PureComponent } from "react";
 import throttle from "lodash.throttle";
 
@@ -8,14 +8,14 @@ import {
   Collaborator,
   ExcalidrawImperativeAPI,
   Gesture,
-} from "aakansha-excalidraw/types/types";
+} from "@excalidraw/excalidraw/types/types";
 import { EVENT } from "../constants";
 import RoomDialog from "./RoomDialog";
 import {
   getElementMap,
   getSceneVersion,
   isInvisiblySmallElement,
-} from "aakansha-excalidraw";
+} from "@excalidraw/excalidraw";
 import {
   decryptAESGEM,
   generateCollaborationLinkData,
@@ -23,7 +23,7 @@ import {
   SocketUpdateDataSource,
   SOCKET_SERVER,
 } from "../data";
-import { ImportedDataState } from "aakansha-excalidraw/types/data/types";
+import { ImportedDataState } from "@excalidraw/excalidraw/types/data/types";
 import {
   APP_NAME,
   INITIAL_SCENE_UPDATE_TIMEOUT,
