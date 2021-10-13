@@ -14,3 +14,14 @@ export const resolvablePromise = <T>() => {
   (promise as any).reject = reject;
   return promise as ResolvablePromise<T>;
 };
+
+export const loadScript = (filePath: string) => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.onload = () => {
+      resolve(filePath);
+    };
+    script.src = filePath;
+    document.head.append(script);
+  });
+};
