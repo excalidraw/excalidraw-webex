@@ -39,11 +39,35 @@ const ExcalidrawWrapper = () => {
   }
 
   useEffect(() => {
+    const initializeWebex = () => {
+      window.webexInstance = new window.Webex.Application();
+      const webexApp = window.webexInstance;
+
+      webexApp.onReady().then(() => {
+        const currentTheme = webexApp.theme.toLowerCase();
+        if (currentTheme !== theme) {
+          setTheme(currentTheme);
+        }
+        webexApp.context
+          .getUser()
+          .then((user: { displayName: string }) => {
+            setUser(user);
+          })
+          .catch((error: Error) => {
+            console.error(error.message);
+          });
+        webexApp.listen().then(() => {
+          webexApp.on("application:themeChanged", (theme: "LIGHT" | "DARK") => {
+            setTheme(theme.toLowerCase() as "light" | "dark");
+          });
+        });
+      });
+    };
     loadScript(WEBEX_URL).then(() => {
       initializeWebex();
       setLoaded(true);
     });
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
     if (!collabAPI || !excalidrawAPI) {
@@ -54,31 +78,6 @@ const ExcalidrawWrapper = () => {
       initialStatePromiseRef.current.promise.resolve(scene);
     });
   }, [collabAPI, excalidrawAPI]);
-
-  const initializeWebex = () => {
-    window.webexInstance = new window.Webex.Application();
-    const webexApp = window.webexInstance;
-
-    webexApp.onReady().then(() => {
-      const currentTheme = webexApp.theme.toLowerCase();
-      if (currentTheme !== theme) {
-        setTheme(currentTheme);
-      }
-      webexApp.context
-        .getUser()
-        .then((user: { displayName: string }) => {
-          setUser(user);
-        })
-        .catch((error: Error) => {
-          console.error(error.message);
-        });
-      webexApp.listen().then(() => {
-        webexApp.on("application:themeChanged", (theme: "LIGHT" | "DARK") => {
-          setTheme(theme.toLowerCase() as "light" | "dark");
-        });
-      });
-    });
-  };
 
   const initializeScene = async (opts: {
     collabAPI: CollabAPI;
