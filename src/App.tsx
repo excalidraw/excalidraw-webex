@@ -31,6 +31,7 @@ const ExcalidrawWrapper = () => {
 
   const [loaded, setLoaded] = useState(false);
   const [user, setUser] = useState({});
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   if (!initialStatePromiseRef.current.promise) {
     initialStatePromiseRef.current.promise =
@@ -66,6 +67,12 @@ const ExcalidrawWrapper = () => {
         .catch((error: Error) => {
           console.error(error.message);
         });
+      webexApp.listen().then(() => {
+        webexApp.on("application:themeChanged", (theme: "LIGHT" | "DARK") => {
+          console.log(theme);
+          setTheme(theme.toLowerCase() as "light" | "dark");
+        });
+      });
     });
   };
 
@@ -98,6 +105,7 @@ const ExcalidrawWrapper = () => {
         isCollaborating={collabAPI?.isCollaborating()}
         initialData={initialStatePromiseRef.current.promise}
         onPointerUpdate={collabAPI?.onPointerUpdate}
+        theme={theme}
       />
       {excalidrawAPI && (
         <CollabWrapper excalidrawAPI={excalidrawAPI} user={user} />
