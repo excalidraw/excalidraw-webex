@@ -58,12 +58,13 @@ const ExcalidrawWrapper = () => {
   const initializeWebex = () => {
     window.webexInstance = new window.Webex.Application();
     const webexApp = window.webexInstance;
-    const currentTheme = webexApp.theme;
-    console.log("currrent theme", currentTheme);
-    if (currentTheme !== theme) {
-      setTheme(currentTheme);
-    }
+
     webexApp.onReady().then(() => {
+      const currentTheme = webexApp.theme;
+      console.log("currrent theme", currentTheme);
+      if (currentTheme !== theme) {
+        setTheme(currentTheme);
+      }
       webexApp.context
         .getUser()
         .then((user: { displayName: string }) => {
