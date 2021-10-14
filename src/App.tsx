@@ -1,4 +1,4 @@
-import Excalidraw from "@excalidraw/excalidraw";
+import Excalidraw, { THEME } from "@excalidraw/excalidraw";
 import {
   AppState,
   ExcalidrawImperativeAPI,
@@ -13,7 +13,10 @@ import CollabWrapper, {
 import { useCallbackRefState } from "./hooks/useCallbackRefState";
 
 import "./App.css";
-import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
+import {
+  ExcalidrawElement,
+  Theme,
+} from "@excalidraw/excalidraw/types/element/types";
 import { ImportedDataState } from "@excalidraw/excalidraw/types/data/types";
 import { getCollaborationLinkData } from "./data";
 import { ResolvablePromise } from "@excalidraw/excalidraw/types/utils";
@@ -31,7 +34,7 @@ const ExcalidrawWrapper = () => {
 
   const [loaded, setLoaded] = useState(false);
   const [user, setUser] = useState({});
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<Theme>(THEME.LIGHT);
 
   if (!initialStatePromiseRef.current.promise) {
     initialStatePromiseRef.current.promise =
@@ -58,7 +61,7 @@ const ExcalidrawWrapper = () => {
           });
         webexApp.listen().then(() => {
           webexApp.on("application:themeChanged", (theme: "LIGHT" | "DARK") => {
-            setTheme(theme.toLowerCase() as "light" | "dark");
+            setTheme(theme.toLowerCase() as Theme);
           });
         });
       });

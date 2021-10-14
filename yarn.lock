@@ -1182,10 +1182,10 @@
   resolved "https://registry.yarnpkg.com/@excalidraw/eslint-config/-/eslint-config-1.0.1.tgz#1289559eb9bdf84117c5af5d082343ab6d36fd65"
   integrity sha512-BUkZLH2M1sPA/wPbho8w8yJhSY+jdd4lB9fs2Dn606ZutlDKXVMnn8LqrtAlYiJlRYwi6EQRgGdVkNrHCOssjg==
 
-"@excalidraw/excalidraw@0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@excalidraw/excalidraw/-/excalidraw-0.10.0.tgz#5329d6fb1b0cca068e2cd34da6d648dd6d0d3fec"
-  integrity sha512-0fHc/oX394dHAT7LEacwZ0vh8aeI179plYnfaeLeRHBtHARgmtlmvxcnxd2pxJ0Z1Uj/Cy76oK9MVw/y8P1HhQ==
+"@excalidraw/excalidraw@npm:@excalidraw/excalidraw-next@latest":
+  version "0.10.0-463857a"
+  resolved "https://registry.yarnpkg.com/@excalidraw/excalidraw-next/-/excalidraw-next-0.10.0-463857a.tgz#77a306d69b6500f0dde70ae0bb86df5d1a8c684a"
+  integrity sha512-KNjSihikGDViSm0EwBEQU2yxKCC9j9fG8v2eazxW6dh2kYLVJveV2NpyJENsoCCN8V50eCjTAWwc7XorPI7xhg==
 
 "@excalidraw/prettier-config@^1.0.2":
   version "1.0.2"
