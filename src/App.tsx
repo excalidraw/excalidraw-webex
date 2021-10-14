@@ -61,7 +61,6 @@ const ExcalidrawWrapper = () => {
 
     webexApp.onReady().then(() => {
       const currentTheme = webexApp.theme.toLowerCase();
-      console.log("currrent theme", currentTheme);
       if (currentTheme !== theme) {
         setTheme(currentTheme);
       }
