@@ -31,6 +31,7 @@ const ExcalidrawWrapper = () => {
 
   const [loaded, setLoaded] = useState(false);
   const [user, setUser] = useState({});
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   if (!initialStatePromiseRef.current.promise) {
     initialStatePromiseRef.current.promise =
@@ -38,11 +39,35 @@ const ExcalidrawWrapper = () => {
   }
 
   useEffect(() => {
+    const initializeWebex = () => {
+      window.webexInstance = new window.Webex.Application();
+      const webexApp = window.webexInstance;
+
+      webexApp.onReady().then(() => {
+        const currentTheme = webexApp.theme.toLowerCase();
+        if (currentTheme !== theme) {
+          setTheme(currentTheme);
+        }
+        webexApp.context
+          .getUser()
+          .then((user: { displayName: string }) => {
+            setUser(user);
+          })
+          .catch((error: Error) => {
+            console.error(error.message);
+          });
+        webexApp.listen().then(() => {
+          webexApp.on("application:themeChanged", (theme: "LIGHT" | "DARK") => {
+            setTheme(theme.toLowerCase() as "light" | "dark");
+          });
+        });
+      });
+    };
     loadScript(WEBEX_URL).then(() => {
       initializeWebex();
       setLoaded(true);
     });
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
     if (!collabAPI || !excalidrawAPI) {
@@ -53,21 +78,6 @@ const ExcalidrawWrapper = () => {
       initialStatePromiseRef.current.promise.resolve(scene);
     });
   }, [collabAPI, excalidrawAPI]);
-
-  const initializeWebex = () => {
-    window.webexInstance = new window.Webex.Application();
-    const webexApp = window.webexInstance;
-    webexApp.onReady().then(() => {
-      webexApp.context
-        .getUser()
-        .then((user: { displayName: string }) => {
-          setUser(user);
-        })
-        .catch((error: Error) => {
-          console.error(error.message);
-        });
-    });
-  };
 
   const initializeScene = async (opts: {
     collabAPI: CollabAPI;
@@ -98,6 +108,7 @@ const ExcalidrawWrapper = () => {
         isCollaborating={collabAPI?.isCollaborating()}
         initialData={initialStatePromiseRef.current.promise}
         onPointerUpdate={collabAPI?.onPointerUpdate}
+        theme={theme}
       />
       {excalidrawAPI && (
         <CollabWrapper excalidrawAPI={excalidrawAPI} user={user} />
