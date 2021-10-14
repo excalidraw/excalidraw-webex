@@ -58,6 +58,10 @@ const ExcalidrawWrapper = () => {
   const initializeWebex = () => {
     window.webexInstance = new window.Webex.Application();
     const webexApp = window.webexInstance;
+    const currentUserTheme = webexApp.theme;
+    if (currentUserTheme !== theme) {
+      setTheme(currentUserTheme);
+    }
     webexApp.onReady().then(() => {
       webexApp.context
         .getUser()
@@ -69,7 +73,6 @@ const ExcalidrawWrapper = () => {
         });
       webexApp.listen().then(() => {
         webexApp.on("application:themeChanged", (theme: "LIGHT" | "DARK") => {
-          console.log(theme);
           setTheme(theme.toLowerCase() as "light" | "dark");
         });
       });
