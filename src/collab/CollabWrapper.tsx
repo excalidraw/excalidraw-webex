@@ -294,7 +294,7 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
       this.initializeSocket();
       scenePromise.resolve(null);
     });
-
+    console.log("hello there", window.location.href);
     window.webexInstance.setShareUrl(window.location.href);
 
     return scenePromise;

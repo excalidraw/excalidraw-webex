@@ -63,6 +63,16 @@ const ExcalidrawWrapper = () => {
           webexApp.on("application:themeChanged", (theme: "LIGHT" | "DARK") => {
             setTheme(theme.toLowerCase() as Theme);
           });
+
+          webexApp.on("application: shareStateChanged", (isShared: boolean) => {
+            // Open json export modal if sharing turned off
+            if (!isShared) {
+              const exportButton = document.querySelector(
+                '[data-testid="json-export-button"]',
+              ) as HTMLElement;
+              exportButton.click();
+            }
+          });
         });
       });
     };
