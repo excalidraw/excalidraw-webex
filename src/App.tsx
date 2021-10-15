@@ -100,11 +100,13 @@ const ExcalidrawWrapper = () => {
                 exportButton = document.querySelector(
                   '[data-testid="json-export-button"]',
                 ) as HTMLElement;
+                exportButton.click();
                 excalidrawAPI.updateScene({
                   appState: { ...currentAppState, openMenu: null },
                 });
+              } else {
+                exportButton.click();
               }
-              exportButton.click();
             }
           });
         });
