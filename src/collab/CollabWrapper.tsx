@@ -290,6 +290,9 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
       this.initializeSocket();
       scenePromise.resolve(null);
     });
+
+    window.webexInstance.setShareUrl(window.location.href);
+
     return scenePromise;
   };
 
@@ -358,10 +361,6 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
     this.setLastBroadcastedOrReceivedSceneVersion(getSceneVersion(newElements));
 
     return newElements as ReconciledElements;
-  };
-
-  openPortal = async () => {
-    return this.initializeSocketClient(null);
   };
 
   closePortal = () => {
