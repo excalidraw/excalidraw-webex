@@ -86,9 +86,24 @@ const ExcalidrawWrapper = () => {
             console.log("share state", isShared);
             // Open json export modal if sharing turned off
             if (!isShared) {
-              const exportButton = document.querySelector(
+              let exportButton = document.querySelector(
                 '[data-testid="json-export-button"]',
               ) as HTMLElement;
+
+              // This will happen for mobile view
+              if (exportButton === null) {
+                // open mobile menu => click on export => close mobile menu
+                const currentAppState = excalidrawAPI.getAppState();
+                excalidrawAPI.updateScene({
+                  appState: { ...currentAppState, openMenu: "canvas" },
+                });
+                exportButton = document.querySelector(
+                  '[data-testid="json-export-button"]',
+                ) as HTMLElement;
+                excalidrawAPI.updateScene({
+                  appState: { ...currentAppState, openMenu: null },
+                });
+              }
               exportButton.click();
             }
           });
