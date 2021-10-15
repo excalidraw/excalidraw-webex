@@ -10,7 +10,6 @@ import {
   Gesture,
 } from "@excalidraw/excalidraw/types/types";
 import { EVENT } from "../constants";
-import RoomDialog from "./RoomDialog";
 import {
   getElementMap,
   getSceneVersion,
@@ -33,8 +32,6 @@ import {
 import { resolvablePromise } from "../utils";
 
 interface CollabState {
-  modalIsShown: boolean;
-  activeRoomLink: string;
   errorMessage: string;
 }
 
@@ -43,7 +40,6 @@ type CollabInstance = InstanceType<typeof CollabWrapper>;
 export interface CollabAPI {
   isCollaborating: () => boolean;
   initializeSocketClient: CollabInstance["initializeSocketClient"];
-  onCollabButtonClick: CollabInstance["onCollabButtonClick"];
   broadcastElements: CollabInstance["broadcastElements"];
   onPointerUpdate: CollabInstance["onPointerUpdate"];
 }
@@ -83,8 +79,6 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      modalIsShown: false,
-      activeRoomLink: "",
       errorMessage: "",
     };
 
@@ -102,12 +96,6 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
 
   private onUnload = () => {
     this.destroySocketClient({ isUnload: true });
-  };
-
-  onCollabButtonClick = () => {
-    this.setState({
-      modalIsShown: true,
-    });
   };
 
   broadcastElements = (elements: readonly ExcalidrawElement[]) => {
@@ -147,9 +135,7 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
       this.excalidrawAPI.updateScene({
         collaborators: this.collaborators,
       });
-      this.setState({
-        activeRoomLink: "",
-      });
+
       window.webexInstance.clearShareUrl();
       this.isCollaborating = false;
     }
@@ -304,14 +290,7 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
       scenePromise.resolve(null);
     });
 
-    this.setState(
-      {
-        activeRoomLink: window.location.href,
-      },
-      () => {
-        window.webexInstance.setShareUrl(this.state.activeRoomLink);
-      },
-    );
+    window.webexInstance.setShareUrl(window.location.href);
 
     return scenePromise;
   };
@@ -383,10 +362,6 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
     return newElements as ReconciledElements;
   };
 
-  openPortal = async () => {
-    return this.initializeSocketClient(null);
-  };
-
   closePortal = () => {
     window.history.pushState({}, APP_NAME, window.location.origin);
     this.destroySocketClient();
@@ -443,28 +418,13 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
     this.contextValue.isCollaborating = () => this.isCollaborating;
     this.contextValue.onPointerUpdate = this.onPointerUpdate;
     this.contextValue.initializeSocketClient = this.initializeSocketClient;
-    this.contextValue.onCollabButtonClick = this.onCollabButtonClick;
     this.contextValue.broadcastElements = this.broadcastElements;
     return this.contextValue;
   };
 
   render() {
-    const { activeRoomLink, modalIsShown } = this.state;
-
     return (
       <>
-        {modalIsShown && (
-          <RoomDialog
-            handleClose={() => this.setState({ modalIsShown: false })}
-            activeRoomLink={activeRoomLink}
-            onRoomCreate={this.openPortal}
-            onRoomDestroy={this.closePortal}
-            setErrorMessage={(errorMessage: string) => {
-              this.setState({ errorMessage });
-            }}
-            theme={this.excalidrawAPI.getAppState().theme}
-          />
-        )}
         <CollabContextProvider
           value={{
             api: this.getContextValue(),

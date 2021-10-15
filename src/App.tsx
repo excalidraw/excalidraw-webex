@@ -20,7 +20,7 @@ import {
 import { ImportedDataState } from "@excalidraw/excalidraw/types/data/types";
 import { getCollaborationLinkData } from "./data";
 import { ResolvablePromise } from "@excalidraw/excalidraw/types/utils";
-import { loadScript, resolvablePromise } from "./utils";
+import { isDev, loadScript, resolvablePromise } from "./utils";
 import { WEBEX_URL } from "./constants";
 
 const ExcalidrawWrapper = () => {
@@ -46,7 +46,24 @@ const ExcalidrawWrapper = () => {
       window.webexInstance = new window.Webex.Application();
       const webexApp = window.webexInstance;
 
+      if (!collabAPI || !excalidrawAPI) {
+        return;
+      }
+
+      const initiateCollab = () => {
+        const roomLinkData = getCollaborationLinkData(window.location.href);
+        if (!roomLinkData) {
+          collabAPI?.initializeSocketClient(null);
+        }
+      };
+
+      // Initial collab session manually as webex onReady will not be triggered in dev mode
+      if (isDev()) {
+        initiateCollab();
+      }
+
       webexApp.onReady().then(() => {
+        initiateCollab();
         const currentTheme = webexApp.theme.toLowerCase();
         if (currentTheme !== theme) {
           setTheme(currentTheme);
@@ -63,14 +80,41 @@ const ExcalidrawWrapper = () => {
           webexApp.on("application:themeChanged", (theme: "LIGHT" | "DARK") => {
             setTheme(theme.toLowerCase() as Theme);
           });
+
+          webexApp.on("application:shareStateChanged", (isShared: boolean) => {
+            // Open json export modal if sharing turned off
+            if (!isShared) {
+              let exportButton = document.querySelector(
+                '[data-testid="json-export-button"]',
+              ) as HTMLElement;
+
+              // This will happen for mobile view
+              if (exportButton === null) {
+                // open mobile menu => click on export => close mobile menu
+                const currentAppState = excalidrawAPI.getAppState();
+                excalidrawAPI.updateScene({
+                  appState: { ...currentAppState, openMenu: "canvas" },
+                });
+                exportButton = document.querySelector(
+                  '[data-testid="json-export-button"]',
+                ) as HTMLElement;
+              }
+              exportButton.click();
+            }
+          });
         });
       });
     };
-    loadScript(WEBEX_URL).then(() => {
+
+    if (!window.webexInstance) {
+      loadScript(WEBEX_URL).then(() => {
+        initializeWebex();
+        setLoaded(true);
+      });
+    } else {
       initializeWebex();
-      setLoaded(true);
-    });
-  }, [theme]);
+    }
+  }, [theme, excalidrawAPI, collabAPI]);
 
   useEffect(() => {
     if (!collabAPI || !excalidrawAPI) {
@@ -107,7 +151,6 @@ const ExcalidrawWrapper = () => {
       <Excalidraw
         ref={excalidrawRefCallback}
         onChange={onChange}
-        onCollabButtonClick={collabAPI?.onCollabButtonClick}
         isCollaborating={collabAPI?.isCollaborating()}
         initialData={initialStatePromiseRef.current.promise}
         onPointerUpdate={collabAPI?.onPointerUpdate}
