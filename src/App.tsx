@@ -20,7 +20,7 @@ import {
 import { ImportedDataState } from "@excalidraw/excalidraw/types/data/types";
 import { getCollaborationLinkData } from "./data";
 import { ResolvablePromise } from "@excalidraw/excalidraw/types/utils";
-import { loadScript, resolvablePromise } from "./utils";
+import { isDev, loadScript, resolvablePromise } from "./utils";
 import { WEBEX_URL } from "./constants";
 
 const ExcalidrawWrapper = () => {
@@ -46,7 +46,25 @@ const ExcalidrawWrapper = () => {
       window.webexInstance = new window.Webex.Application();
       const webexApp = window.webexInstance;
 
+      if (!collabAPI || !excalidrawAPI) {
+        return;
+      }
+
+      const initiateCollab = () => {
+        const roomLinkData = getCollaborationLinkData(window.location.href);
+        if (!roomLinkData) {
+          collabAPI?.initializeSocketClient(null);
+        }
+      };
+
+      // Initial collab session manually as webex onReady will not be triggered in dev mode
+      if (isDev()) {
+        console.log("developement");
+        initiateCollab();
+      }
+
       webexApp.onReady().then(() => {
+        initiateCollab();
         const currentTheme = webexApp.theme.toLowerCase();
         if (currentTheme !== theme) {
           setTheme(currentTheme);
@@ -64,7 +82,8 @@ const ExcalidrawWrapper = () => {
             setTheme(theme.toLowerCase() as Theme);
           });
 
-          webexApp.on("application: shareStateChanged", (isShared: boolean) => {
+          webexApp.on("application:shareStateChanged", (isShared: boolean) => {
+            console.log("share state", isShared);
             // Open json export modal if sharing turned off
             if (!isShared) {
               const exportButton = document.querySelector(
@@ -76,11 +95,16 @@ const ExcalidrawWrapper = () => {
         });
       });
     };
-    loadScript(WEBEX_URL).then(() => {
+
+    if (!window.webexInstance) {
+      loadScript(WEBEX_URL).then(() => {
+        initializeWebex();
+        setLoaded(true);
+      });
+    } else {
       initializeWebex();
-      setLoaded(true);
-    });
-  }, [theme]);
+    }
+  }, [theme, excalidrawAPI, collabAPI]);
 
   useEffect(() => {
     if (!collabAPI || !excalidrawAPI) {

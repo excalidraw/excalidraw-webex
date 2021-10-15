@@ -82,13 +82,9 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
     this.state = {
       errorMessage: "",
     };
-    const roomLinkData = getCollaborationLinkData(window.location.href);
 
     this.portal = new Portal(this);
     this.excalidrawAPI = props.excalidrawAPI;
-    if (!roomLinkData) {
-      this.openPortal();
-    }
   }
 
   componentDidMount() {
@@ -294,9 +290,6 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
       this.initializeSocket();
       scenePromise.resolve(null);
     });
-    console.log("hello there", window.location.href);
-    window.webexInstance.setShareUrl(window.location.href);
-
     return scenePromise;
   };
 

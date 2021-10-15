@@ -1,3 +1,5 @@
+import { ENV } from "./constants";
+
 export type ResolvablePromise<T> = Promise<T> & {
   resolve: [T] extends [undefined] ? (value?: T) => void : (value: T) => void;
   reject: (error: Error) => void;
@@ -24,4 +26,8 @@ export const loadScript = (filePath: string) => {
     script.src = filePath;
     document.head.append(script);
   });
+};
+
+export const isDev = () => {
+  return process.env.NODE_ENV === ENV.DEVELOPMENT;
 };
