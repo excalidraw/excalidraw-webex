@@ -107,7 +107,6 @@ const ExcalidrawWrapper = () => {
       <Excalidraw
         ref={excalidrawRefCallback}
         onChange={onChange}
-        onCollabButtonClick={collabAPI?.onCollabButtonClick}
         isCollaborating={collabAPI?.isCollaborating()}
         initialData={initialStatePromiseRef.current.promise}
         onPointerUpdate={collabAPI?.onPointerUpdate}
