@@ -59,7 +59,6 @@ const ExcalidrawWrapper = () => {
 
       // Initial collab session manually as webex onReady will not be triggered in dev mode
       if (isDev()) {
-        console.log("developement");
         initiateCollab();
       }
 
@@ -83,7 +82,6 @@ const ExcalidrawWrapper = () => {
           });
 
           webexApp.on("application:shareStateChanged", (isShared: boolean) => {
-            console.log("share state", isShared);
             // Open json export modal if sharing turned off
             if (!isShared) {
               let exportButton = document.querySelector(
