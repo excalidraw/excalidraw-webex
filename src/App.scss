@@ -1,0 +1,14 @@
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+}
+.excalidraw-wrapper {
+  width: 100%;
+  height: 100%;
+
+  .d-none {
+    display: none;
+  }
+}
