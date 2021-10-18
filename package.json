@@ -4,6 +4,7 @@
   "private": true,
   "prettier": "@excalidraw/prettier-config",
   "dependencies": {
+    "@excalidraw/excalidraw": "npm:@excalidraw/excalidraw-next@latest",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -11,7 +12,6 @@
     "@types/node": "^16.10.3",
     "@types/react": "^17.0.27",
     "@types/react-dom": "^17.0.9",
-    "@excalidraw/excalidraw": "npm:@excalidraw/excalidraw-next@latest",
     "clsx": "^1.1.1",
     "lodash.throttle": "^4.1.1",
     "open-color": "^1.9.1",

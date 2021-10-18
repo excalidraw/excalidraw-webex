@@ -1183,9 +1183,9 @@
   integrity sha512-BUkZLH2M1sPA/wPbho8w8yJhSY+jdd4lB9fs2Dn606ZutlDKXVMnn8LqrtAlYiJlRYwi6EQRgGdVkNrHCOssjg==
 
 "@excalidraw/excalidraw@npm:@excalidraw/excalidraw-next@latest":
-  version "0.10.0-463857a"
-  resolved "https://registry.yarnpkg.com/@excalidraw/excalidraw-next/-/excalidraw-next-0.10.0-463857a.tgz#77a306d69b6500f0dde70ae0bb86df5d1a8c684a"
-  integrity sha512-KNjSihikGDViSm0EwBEQU2yxKCC9j9fG8v2eazxW6dh2kYLVJveV2NpyJENsoCCN8V50eCjTAWwc7XorPI7xhg==
+  version "0.10.0-c6ffc06"
+  resolved "https://registry.yarnpkg.com/@excalidraw/excalidraw-next/-/excalidraw-next-0.10.0-c6ffc06.tgz#32515e4145cc7005908cbefb0dd634046c066842"
+  integrity sha512-SslANvLjkg6NAwLdP8IInE2k1126O13cg0pIoYSKL+N468hUcIa50u1c3X78j5kBMaF6qOrZ9hAt8PeA8XdZJQ==
 
 "@excalidraw/prettier-config@^1.0.2":
   version "1.0.2"
