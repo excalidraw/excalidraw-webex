@@ -21,7 +21,7 @@ import { ImportedDataState } from "@excalidraw/excalidraw/types/data/types";
 import { getCollaborationLinkData } from "./data";
 import { ResolvablePromise } from "@excalidraw/excalidraw/types/utils";
 import { isDev, loadScript, resolvablePromise } from "./utils";
-import { WEBEX_URL } from "./constants";
+import { isDarwin, WEBEX_URL } from "./constants";
 
 const ExcalidrawWrapper = () => {
   const [excalidrawAPI, excalidrawRefCallback] =
@@ -45,7 +45,12 @@ const ExcalidrawWrapper = () => {
     const initializeWebex = () => {
       window.webexInstance = new window.Webex.Application();
       const webexApp = window.webexInstance;
-
+      if (webexApp.deviceType === "DESKTOP" && isDarwin) {
+        const imageExport = document.querySelector(
+          '[data-testid="image-export-button"]',
+        ) as HTMLElement;
+        imageExport?.classList.add("d-none");
+      }
       if (!collabAPI || !excalidrawAPI) {
         return;
       }

@@ -31,3 +31,5 @@ export enum SCENE {
 }
 
 export const APP_NAME = "Excalidraw";
+
+export const isDarwin = /Mac|iPod|iPhone|iPad/.test(window.navigator.platform);
