@@ -14,7 +14,7 @@ export type EncryptedData = {
   iv: Uint8Array;
 };
 
-export const SOCKET_SERVER = "https://portal.excalidraw.com";
+export const SOCKET_SERVER = "https://webex-collab-us-1.excalidraw.com";
 
 export const getImportedKey = (key: string, usage: KeyUsage) =>
   window.crypto.subtle.importKey(
