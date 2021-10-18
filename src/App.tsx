@@ -3,7 +3,7 @@ import {
   AppState,
   ExcalidrawImperativeAPI,
 } from "@excalidraw/excalidraw/types/types";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 import CollabWrapper, {
   CollabAPI,
@@ -12,7 +12,7 @@ import CollabWrapper, {
 } from "./collab/CollabWrapper";
 import { useCallbackRefState } from "./hooks/useCallbackRefState";
 
-import "./App.css";
+import "./App.scss";
 import {
   ExcalidrawElement,
   Theme,
@@ -143,6 +143,21 @@ const ExcalidrawWrapper = () => {
       collabAPI.broadcastElements(elements);
     }
   };
+
+  const renderTopRightUI = useCallback((isMobile) => {
+    return (
+      <div className="logo">
+        <a
+          href="https://plus.excalidraw.com/?utm_source=excalidraw&utm_medium=banner&utm_campaign=launch"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <img src="/logo.png" alt="excalidraw logo" />
+        </a>
+      </div>
+    );
+  }, []);
+
   if (!loaded) {
     return null;
   }
@@ -155,6 +170,7 @@ const ExcalidrawWrapper = () => {
         initialData={initialStatePromiseRef.current.promise}
         onPointerUpdate={collabAPI?.onPointerUpdate}
         theme={theme}
+        renderTopRightUI={renderTopRightUI}
       />
       {excalidrawAPI && (
         <CollabWrapper excalidrawAPI={excalidrawAPI} user={user} />
