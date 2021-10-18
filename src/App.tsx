@@ -3,7 +3,7 @@ import {
   AppState,
   ExcalidrawImperativeAPI,
 } from "@excalidraw/excalidraw/types/types";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 import CollabWrapper, {
   CollabAPI,
@@ -20,7 +20,12 @@ import {
 import { ImportedDataState } from "@excalidraw/excalidraw/types/data/types";
 import { getCollaborationLinkData } from "./data";
 import { ResolvablePromise } from "@excalidraw/excalidraw/types/utils";
-import { isDev, loadScript, resolvablePromise } from "./utils";
+import {
+  hideUnsupportedActions,
+  isDev,
+  loadScript,
+  resolvablePromise,
+} from "./utils";
 import { isDarwin, WEBEX_URL } from "./constants";
 
 const ExcalidrawWrapper = () => {
@@ -46,10 +51,7 @@ const ExcalidrawWrapper = () => {
       window.webexInstance = new window.Webex.Application();
       const webexApp = window.webexInstance;
       if (webexApp.deviceType === "DESKTOP" && isDarwin) {
-        const imageExport = document.querySelector(
-          '[data-testid="image-export-button"]',
-        ) as HTMLElement;
-        imageExport?.classList.add("d-none");
+        hideUnsupportedActions();
       }
       if (!collabAPI || !excalidrawAPI) {
         return;
@@ -144,10 +146,28 @@ const ExcalidrawWrapper = () => {
     elements: readonly ExcalidrawElement[],
     appState: AppState,
   ) => {
+    if (appState.openMenu === "canvas") {
+      hideUnsupportedActions();
+    }
     if (collabAPI?.isCollaborating) {
       collabAPI.broadcastElements(elements);
     }
   };
+
+  const renderTopRightUI = useCallback((isMobile) => {
+    return (
+      <div className="logo">
+        <a
+          href="https://plus.excalidraw.com/?utm_source=excalidraw&utm_medium=banner&utm_campaign=launch"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <img src="/logo.png" alt="excalidraw logo" />
+        </a>
+      </div>
+    );
+  }, []);
+
   if (!loaded) {
     return null;
   }
@@ -160,6 +180,7 @@ const ExcalidrawWrapper = () => {
         initialData={initialStatePromiseRef.current.promise}
         onPointerUpdate={collabAPI?.onPointerUpdate}
         theme={theme}
+        renderTopRightUI={renderTopRightUI}
       />
       {excalidrawAPI && (
         <CollabWrapper excalidrawAPI={excalidrawAPI} user={user} />
