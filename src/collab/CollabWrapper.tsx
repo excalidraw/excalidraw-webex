@@ -9,7 +9,15 @@ import {
   ExcalidrawImperativeAPI,
   Gesture,
 } from "@excalidraw/excalidraw/types/types";
-import { EVENT } from "../constants";
+import {
+  ACTIVE_THRESHOLD,
+  EVENT,
+  IDLE_THRESHOLD,
+  APP_NAME,
+  INITIAL_SCENE_UPDATE_TIMEOUT,
+  SCENE,
+  SYNC_FULL_SCENE_INTERVAL_MS,
+} from "../constants";
 import {
   getElementMap,
   getSceneVersion,
@@ -23,16 +31,13 @@ import {
   SOCKET_SERVER,
 } from "../data";
 import { ImportedDataState } from "@excalidraw/excalidraw/types/data/types";
-import {
-  APP_NAME,
-  INITIAL_SCENE_UPDATE_TIMEOUT,
-  SCENE,
-  SYNC_FULL_SCENE_INTERVAL_MS,
-} from "../app_constants";
+
 import { resolvablePromise } from "../utils";
+import { UserIdleState } from "../types";
 
 interface CollabState {
   errorMessage: string;
+  userState: UserIdleState;
 }
 
 type CollabInstance = InstanceType<typeof CollabWrapper>;
@@ -71,6 +76,8 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
   portal: Portal;
   excalidrawAPI: Props["excalidrawAPI"];
   isCollaborating: boolean = false;
+  activeIntervalId: number | null;
+  idleTimeoutId: number | null;
 
   private socketInitializationTimer?: NodeJS.Timeout;
   private lastBroadcastedOrReceivedSceneVersion: number = -1;
@@ -80,10 +87,13 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
     super(props);
     this.state = {
       errorMessage: "",
+      userState: UserIdleState.ACTIVE,
     };
 
     this.portal = new Portal(this);
     this.excalidrawAPI = props.excalidrawAPI;
+    this.activeIntervalId = null;
+    this.idleTimeoutId = null;
   }
 
   componentDidMount() {
@@ -290,6 +300,8 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
       scenePromise.resolve(null);
     });
 
+    this.initializeIdleDetector();
+
     window.webexInstance.setShareUrl(window.location.href);
 
     return scenePromise;
@@ -298,6 +310,63 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
   private initializeSocket = () => {
     this.portal.socketInitialized = true;
     clearTimeout(this.socketInitializationTimer!);
+  };
+
+  private initializeIdleDetector = () => {
+    document.addEventListener(EVENT.POINTER_MOVE, this.onPointerMove);
+    document.addEventListener(EVENT.VISIBILITY_CHANGE, this.onVisibilityChange);
+  };
+
+  private onVisibilityChange = () => {
+    if (document.hidden) {
+      if (this.idleTimeoutId) {
+        window.clearTimeout(this.idleTimeoutId);
+        this.idleTimeoutId = null;
+      }
+      if (this.activeIntervalId) {
+        window.clearInterval(this.activeIntervalId);
+        this.activeIntervalId = null;
+      }
+      this.onIdleStateChange(UserIdleState.AWAY);
+    } else {
+      this.idleTimeoutId = window.setTimeout(this.reportIdle, IDLE_THRESHOLD);
+      this.activeIntervalId = window.setInterval(
+        this.reportActive,
+        ACTIVE_THRESHOLD,
+      );
+      this.onIdleStateChange(UserIdleState.ACTIVE);
+    }
+  };
+
+  private onPointerMove = () => {
+    if (this.idleTimeoutId) {
+      window.clearTimeout(this.idleTimeoutId);
+      this.idleTimeoutId = null;
+    }
+    this.idleTimeoutId = window.setTimeout(this.reportIdle, IDLE_THRESHOLD);
+    if (!this.activeIntervalId) {
+      this.activeIntervalId = window.setInterval(
+        this.reportActive,
+        ACTIVE_THRESHOLD,
+      );
+    }
+  };
+
+  private reportIdle = () => {
+    this.onIdleStateChange(UserIdleState.IDLE);
+    if (this.activeIntervalId) {
+      window.clearInterval(this.activeIntervalId);
+      this.activeIntervalId = null;
+    }
+  };
+
+  private reportActive = () => {
+    this.onIdleStateChange(UserIdleState.ACTIVE);
+  };
+
+  onIdleStateChange = (userState: UserIdleState) => {
+    this.setState({ userState });
+    this.portal.broadcastIdleChange(userState);
   };
 
   private reconcileElements = (

@@ -6,7 +6,7 @@ import {
 
 import CollabWrapper from "./CollabWrapper";
 
-import { BROADCAST, SCENE } from "../app_constants";
+import { BROADCAST, SCENE } from "../constants";
 import { UserIdleState } from "../types";
 import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
 
