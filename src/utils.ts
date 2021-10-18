@@ -36,5 +36,5 @@ export const hideUnsupportedActions = () => {
   const imageExport = document.querySelector(
     '[data-testid="image-export-button"]',
   ) as HTMLElement;
-  imageExport?.classList.add("d-none");
+  imageExport.style.display = "none";
 };
