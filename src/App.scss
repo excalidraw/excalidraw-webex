@@ -11,10 +11,20 @@ body,
   .logo img {
     height: 1.8rem;
     position: absolute;
-    right: 0.1rem;
+    right: 0.3rem;
     top: 4px;
   }
   .d-none {
     display: none;
   }
+  @media screen and (max-width: 385px) {
+    .excalidraw {
+      .App-top-bar {
+        section {
+          margin-right: 1.7rem;
+        }
+      }
+    }
+  }
+
 }
