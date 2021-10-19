@@ -8,11 +8,12 @@ body,
   width: 100%;
   height: 100%;
 
-  .logo img {
-    height: 1.8rem;
-    position: absolute;
-    right: 0.3rem;
-    top: 4px;
+  .excalidraw-logo {
+    margin-left: 2rem;
+    img {
+      height: 1.8rem;
+      margin-top: 0.3rem;
+    }
   }
   .d-none {
     display: none;
@@ -27,4 +28,14 @@ body,
     }
   }
 
+  @media screen and (max-width: 730px) {
+    .excalidraw-logo {
+      margin-left: auto;
+      img {
+        position: absolute;
+        right: 0.3rem;
+        top: 0.3rem;
+      }
+    }
+  }
 }

@@ -150,7 +150,7 @@ const ExcalidrawWrapper = () => {
 
   const renderTopRightUI = useCallback((isMobile) => {
     return (
-      <div className="logo">
+      <div className="excalidraw-logo">
         <a
           href="https://plus.excalidraw.com/?utm_source=excalidraw&utm_medium=banner&utm_campaign=launch"
           target="_blank"
