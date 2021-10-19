@@ -27,6 +27,7 @@ import {
   resolvablePromise,
 } from "./utils";
 import { isDarwin, WEBEX_URL } from "./constants";
+import { ExportToExcalidrawPlus } from "./components/ExportToExcalidrawPlus";
 
 const ExcalidrawWrapper = () => {
   const [excalidrawAPI, excalidrawRefCallback] =
@@ -181,6 +182,25 @@ const ExcalidrawWrapper = () => {
         onPointerUpdate={collabAPI?.onPointerUpdate}
         theme={theme}
         renderTopRightUI={renderTopRightUI}
+        UIOptions={{
+          canvasActions: {
+            export: {
+              renderCustomUI: (elements, appState) => {
+                return (
+                  <ExportToExcalidrawPlus
+                    elements={elements}
+                    appState={appState}
+                    onError={(error) => {
+                      excalidrawAPI?.updateScene({
+                        appState: { errorMessage: error.message },
+                      });
+                    }}
+                  />
+                );
+              },
+            },
+          },
+        }}
       />
       {excalidrawAPI && (
         <CollabWrapper excalidrawAPI={excalidrawAPI} user={user} />
