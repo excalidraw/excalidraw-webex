@@ -1,5 +1,10 @@
-import { ExcalidrawElement } from "@excalidraw/excalidraw/types/element/types";
+import { ExportedDataState } from "@excalidraw/excalidraw/types/data/types";
+import {
+  ExcalidrawElement,
+  NonDeletedExcalidrawElement,
+} from "@excalidraw/excalidraw/types/element/types";
 import { AppState, UserIdleState } from "@excalidraw/excalidraw/types/types";
+import { APP_STATE_STORAGE_CONF } from "../constants";
 
 const IV_LENGTH_BYTES = 12; // 96 bits
 const byteToHex = (byte: number): string => `0${byte.toString(16)}`.slice(-2);
@@ -173,3 +178,72 @@ export const decryptAESGEM = async (
     type: "INVALID_RESPONSE",
   };
 };
+
+export const serializeAsJSON = (
+  elements: readonly ExcalidrawElement[],
+  appState: Partial<AppState>,
+): string => {
+  const data: ExportedDataState = {
+    type: "excalidraw",
+    version: 2,
+    source: window.location.origin,
+    elements: clearElementsForExport(elements),
+    appState: cleanAppStateForExport(appState),
+  };
+
+  return JSON.stringify(data, null, 2);
+};
+
+const _clearElements = (
+  elements: readonly ExcalidrawElement[],
+): ExcalidrawElement[] =>
+  getNonDeletedElements(elements).map((element) =>
+    isLinearElementType(element.type)
+      ? { ...element, lastCommittedPoint: null }
+      : element,
+  );
+
+export const clearElementsForExport = (
+  elements: readonly ExcalidrawElement[],
+) => _clearElements(elements);
+
+export const clearElementsForLocalStorage = (
+  elements: readonly ExcalidrawElement[],
+) => _clearElements(elements);
+
+export const cleanAppStateForExport = (appState: Partial<AppState>) => {
+  return _clearAppStateForStorage(appState, "export");
+};
+
+const _clearAppStateForStorage = <ExportType extends "export" | "browser">(
+  appState: Partial<AppState>,
+  exportType: ExportType,
+) => {
+  type ExportableKeys = {
+    [K in keyof typeof APP_STATE_STORAGE_CONF]: typeof APP_STATE_STORAGE_CONF[K][ExportType] extends true
+      ? K
+      : never;
+  }[keyof typeof APP_STATE_STORAGE_CONF];
+  const stateForExport = {} as { [K in ExportableKeys]?: typeof appState[K] };
+  for (const key of Object.keys(appState) as (keyof typeof appState)[]) {
+    const propConfig = APP_STATE_STORAGE_CONF[key];
+    if (propConfig?.[exportType]) {
+      // @ts-ignore see https://github.com/microsoft/TypeScript/issues/31445
+      stateForExport[key] = appState[key];
+    }
+  }
+  return stateForExport;
+};
+
+export const isLinearElementType = (
+  elementType: ExcalidrawElement["type"],
+): boolean => {
+  return (
+    elementType === "arrow" || elementType === "line" // || elementType === "freedraw"
+  );
+};
+
+export const getNonDeletedElements = (elements: readonly ExcalidrawElement[]) =>
+  elements.filter(
+    (element) => !element.isDeleted,
+  ) as readonly NonDeletedExcalidrawElement[];
