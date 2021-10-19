@@ -25,6 +25,7 @@ import { ResolvablePromise } from "@excalidraw/excalidraw/types/utils";
 import { isDev, loadScript, resolvablePromise } from "./utils";
 import { isDarwin, WEBEX_URL } from "./constants";
 import { ExportToExcalidrawPlus } from "./components/ExportToExcalidrawPlus";
+import Spinner from "./components/Spinner";
 
 const ExcalidrawWrapper = () => {
   const [excalidrawAPI, excalidrawRefCallback] =
@@ -161,10 +162,6 @@ const ExcalidrawWrapper = () => {
     );
   }, []);
 
-  if (!loaded) {
-    return null;
-  }
-
   const getCanvasOptions = () => {
     const isDarwinDesktop =
       window.webexInstance.deviceType === "DESKTOP" && isDarwin;
@@ -196,18 +193,23 @@ const ExcalidrawWrapper = () => {
 
   return (
     <div className="excalidraw-wrapper">
-      <Excalidraw
-        ref={excalidrawRefCallback}
-        onChange={onChange}
-        isCollaborating={collabAPI?.isCollaborating()}
-        initialData={initialStatePromiseRef.current.promise}
-        onPointerUpdate={collabAPI?.onPointerUpdate}
-        theme={theme}
-        renderTopRightUI={renderTopRightUI}
-        UIOptions={{
-          canvasActions: getCanvasOptions(),
-        }}
-      />
+      {loaded ? (
+        <Excalidraw
+          ref={excalidrawRefCallback}
+          onChange={onChange}
+          isCollaborating={collabAPI?.isCollaborating()}
+          initialData={initialStatePromiseRef.current.promise}
+          onPointerUpdate={collabAPI?.onPointerUpdate}
+          theme={theme}
+          renderTopRightUI={renderTopRightUI}
+          UIOptions={{
+            canvasActions: getCanvasOptions(),
+          }}
+        />
+      ) : (
+        <Spinner />
+      )}
+
       {excalidrawAPI && (
         <CollabWrapper excalidrawAPI={excalidrawAPI} user={user} />
       )}
