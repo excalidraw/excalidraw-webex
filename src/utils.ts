@@ -31,10 +31,3 @@ export const loadScript = (filePath: string) => {
 export const isDev = () => {
   return process.env.NODE_ENV === ENV.DEVELOPMENT;
 };
-
-export const hideUnsupportedActions = () => {
-  const imageExport = document.querySelector(
-    '[data-testid="image-export-button"]',
-  ) as HTMLElement;
-  imageExport.style.display = "none";
-};

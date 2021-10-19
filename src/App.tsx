@@ -209,6 +209,7 @@ const ExcalidrawWrapper = () => {
       ) : (
         <Spinner />
       )}
+
       {excalidrawAPI && (
         <CollabWrapper excalidrawAPI={excalidrawAPI} user={user} />
       )}
