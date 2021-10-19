@@ -28,6 +28,7 @@ import {
 } from "./utils";
 import { isDarwin, WEBEX_URL } from "./constants";
 import { ExportToExcalidrawPlus } from "./components/ExportToExcalidrawPlus";
+import Spinner from "./components/Spinner";
 
 const ExcalidrawWrapper = () => {
   const [excalidrawAPI, excalidrawRefCallback] =
@@ -169,39 +170,40 @@ const ExcalidrawWrapper = () => {
     );
   }, []);
 
-  if (!loaded) {
-    return null;
-  }
   return (
     <div className="excalidraw-wrapper">
-      <Excalidraw
-        ref={excalidrawRefCallback}
-        onChange={onChange}
-        isCollaborating={collabAPI?.isCollaborating()}
-        initialData={initialStatePromiseRef.current.promise}
-        onPointerUpdate={collabAPI?.onPointerUpdate}
-        theme={theme}
-        renderTopRightUI={renderTopRightUI}
-        UIOptions={{
-          canvasActions: {
-            export: {
-              renderCustomUI: (elements, appState) => {
-                return (
-                  <ExportToExcalidrawPlus
-                    elements={elements}
-                    appState={appState}
-                    onError={(error) => {
-                      excalidrawAPI?.updateScene({
-                        appState: { errorMessage: error.message },
-                      });
-                    }}
-                  />
-                );
+      {loaded ? (
+        <Excalidraw
+          ref={excalidrawRefCallback}
+          onChange={onChange}
+          isCollaborating={collabAPI?.isCollaborating()}
+          initialData={initialStatePromiseRef.current.promise}
+          onPointerUpdate={collabAPI?.onPointerUpdate}
+          theme={theme}
+          renderTopRightUI={renderTopRightUI}
+          UIOptions={{
+            canvasActions: {
+              export: {
+                renderCustomUI: (elements, appState) => {
+                  return (
+                    <ExportToExcalidrawPlus
+                      elements={elements}
+                      appState={appState}
+                      onError={(error) => {
+                        excalidrawAPI?.updateScene({
+                          appState: { errorMessage: error.message },
+                        });
+                      }}
+                    />
+                  );
+                },
               },
             },
-          },
-        }}
-      />
+          }}
+        />
+      ) : (
+        <Spinner />
+      )}
       {excalidrawAPI && (
         <CollabWrapper excalidrawAPI={excalidrawAPI} user={user} />
       )}
