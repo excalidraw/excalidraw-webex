@@ -2,6 +2,7 @@ import Excalidraw, { THEME } from "@excalidraw/excalidraw";
 import {
   AppState,
   ExcalidrawImperativeAPI,
+  UIOptions,
 } from "@excalidraw/excalidraw/types/types";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
@@ -15,17 +16,13 @@ import { useCallbackRefState } from "./hooks/useCallbackRefState";
 import "./App.scss";
 import {
   ExcalidrawElement,
+  NonDeletedExcalidrawElement,
   Theme,
 } from "@excalidraw/excalidraw/types/element/types";
 import { ImportedDataState } from "@excalidraw/excalidraw/types/data/types";
 import { getCollaborationLinkData } from "./data";
 import { ResolvablePromise } from "@excalidraw/excalidraw/types/utils";
-import {
-  hideUnsupportedActions,
-  isDev,
-  loadScript,
-  resolvablePromise,
-} from "./utils";
+import { isDev, loadScript, resolvablePromise } from "./utils";
 import { isDarwin, WEBEX_URL } from "./constants";
 import { ExportToExcalidrawPlus } from "./components/ExportToExcalidrawPlus";
 import Spinner from "./components/Spinner";
@@ -52,9 +49,7 @@ const ExcalidrawWrapper = () => {
     const initializeWebex = () => {
       window.webexInstance = new window.Webex.Application();
       const webexApp = window.webexInstance;
-      if (webexApp.deviceType === "DESKTOP" && isDarwin) {
-        hideUnsupportedActions();
-      }
+
       if (!collabAPI || !excalidrawAPI) {
         return;
       }
@@ -148,9 +143,6 @@ const ExcalidrawWrapper = () => {
     elements: readonly ExcalidrawElement[],
     appState: AppState,
   ) => {
-    if (appState.openMenu === "canvas") {
-      hideUnsupportedActions();
-    }
     if (collabAPI?.isCollaborating) {
       collabAPI.broadcastElements(elements);
     }
@@ -170,6 +162,35 @@ const ExcalidrawWrapper = () => {
     );
   }, []);
 
+  const getCanvasOptions = () => {
+    const isDarwinDesktop =
+      window.webexInstance.deviceType === "DESKTOP" && isDarwin;
+    const canvasActions: UIOptions["canvasActions"] = {
+      loadScene: !isDarwinDesktop,
+      saveAsImage: !isDarwinDesktop,
+      export: {
+        renderCustomUI: (
+          elements: readonly NonDeletedExcalidrawElement[],
+          appState: AppState,
+        ) => {
+          return (
+            <ExportToExcalidrawPlus
+              elements={elements}
+              appState={appState}
+              onError={(error) => {
+                excalidrawAPI?.updateScene({
+                  appState: { errorMessage: error.message },
+                });
+              }}
+            />
+          );
+        },
+        saveFileToDisk: !isDarwinDesktop,
+      },
+    };
+    return canvasActions;
+  };
+
   return (
     <div className="excalidraw-wrapper">
       {loaded ? (
@@ -182,23 +203,7 @@ const ExcalidrawWrapper = () => {
           theme={theme}
           renderTopRightUI={renderTopRightUI}
           UIOptions={{
-            canvasActions: {
-              export: {
-                renderCustomUI: (elements, appState) => {
-                  return (
-                    <ExportToExcalidrawPlus
-                      elements={elements}
-                      appState={appState}
-                      onError={(error) => {
-                        excalidrawAPI?.updateScene({
-                          appState: { errorMessage: error.message },
-                        });
-                      }}
-                    />
-                  );
-                },
-              },
-            },
+            canvasActions: getCanvasOptions(),
           }}
         />
       ) : (
