@@ -18,6 +18,12 @@ body,
   .d-none {
     display: none;
   }
+  .excalidraw {
+    .ToolIcon.ToolIcon__library {
+      display: none;
+    }
+  }
+
   @media screen and (max-width: 385px) {
     .excalidraw {
       .App-top-bar {
