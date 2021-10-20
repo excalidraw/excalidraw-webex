@@ -166,9 +166,11 @@ const ExcalidrawWrapper = () => {
     const canvasActions: UIOptions["canvasActions"] = {
       loadScene: !isDarwinDesktop,
       saveAsImage: !isDarwinDesktop,
-      export: {
-        saveFileToDisk: !isDarwinDesktop,
-      },
+      export: isDarwinDesktop
+        ? false
+        : {
+            saveFileToDisk: true,
+          },
     };
     return canvasActions;
   };
