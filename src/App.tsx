@@ -16,7 +16,6 @@ import { useCallbackRefState } from "./hooks/useCallbackRefState";
 import "./App.scss";
 import {
   ExcalidrawElement,
-  NonDeletedExcalidrawElement,
   Theme,
 } from "@excalidraw/excalidraw/types/element/types";
 import { ImportedDataState } from "@excalidraw/excalidraw/types/data/types";
@@ -24,7 +23,6 @@ import { getCollaborationLinkData } from "./data";
 import { ResolvablePromise } from "@excalidraw/excalidraw/types/utils";
 import { isDev, loadScript, resolvablePromise } from "./utils";
 import { isDarwin, WEBEX_URL } from "./constants";
-import { ExportToExcalidrawPlus } from "./components/ExportToExcalidrawPlus";
 import Spinner from "./components/Spinner";
 
 const ExcalidrawWrapper = () => {
@@ -169,22 +167,6 @@ const ExcalidrawWrapper = () => {
       loadScene: !isDarwinDesktop,
       saveAsImage: !isDarwinDesktop,
       export: {
-        renderCustomUI: (
-          elements: readonly NonDeletedExcalidrawElement[],
-          appState: AppState,
-        ) => {
-          return (
-            <ExportToExcalidrawPlus
-              elements={elements}
-              appState={appState}
-              onError={(error) => {
-                excalidrawAPI?.updateScene({
-                  appState: { errorMessage: error.message },
-                });
-              }}
-            />
-          );
-        },
         saveFileToDisk: !isDarwinDesktop,
       },
     };
