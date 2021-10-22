@@ -22,6 +22,11 @@ body,
     .ToolIcon.ToolIcon__library {
       display: none;
     }
+
+    button[aria-label="Undo"],
+    button[aria-label="Redo"] {
+      display: none;
+    }
   }
 
   @media screen and (max-width: 385px) {
