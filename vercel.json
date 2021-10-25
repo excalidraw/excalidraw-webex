@@ -1,3 +1,16 @@
 {
-  "rewrites": [{ "source": "/about/:match*", "destination": "https://excalidraw-webex-lp.vercel.app/:match*" }]
+  "rewrites": [
+    {
+      "source": "/about/app/:match*",
+      "destination": "https://webex.excalidraw.com/:match*",
+
+      "has": [
+        {
+          "type": "host",
+          "value": "webex.excalidraw.com"
+        }
+      ]
+    },
+    { "source": "/about/:match*", "destination": "https://excalidraw-webex-lp.vercel.app/:match*" }
+  ]
 }
