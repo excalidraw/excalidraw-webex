@@ -1,0 +1,3 @@
+{
+  "rewrites": [{ "source": "/about/:match*", "destination": "https://excalidraw-webex-lp.vercel.app/:match*" }]
+}
