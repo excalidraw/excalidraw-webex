@@ -1,5 +1,3 @@
-# excalidraw-webex
-
 # Excalidraw for webex
 
 Excalidraw embedded to be used inside Webex meetings.
